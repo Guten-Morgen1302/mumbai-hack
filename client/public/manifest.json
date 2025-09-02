@@ -1,0 +1,50 @@
+{
+  "name": "MumbaiHacks AI Health",
+  "short_name": "MH Health",
+  "description": "AI-powered healthcare management system for Mumbai",
+  "theme_color": "#06B6D4",
+  "background_color": "#0F172A",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "categories": ["health", "medical", "productivity"],
+  "features": [
+    "Voice Commands",
+    "Offline Mode",
+    "Push Notifications",
+    "GPS Integration",
+    "AI Analytics"
+  ],
+  "shortcuts": [
+    {
+      "name": "Emergency Dashboard",
+      "url": "/dashboard",
+      "description": "Quick access to emergency control center"
+    },
+    {
+      "name": "Find Hospital",
+      "url": "/map",
+      "description": "Locate nearest hospital with GPS"
+    },
+    {
+      "name": "Health Advisory",
+      "url": "/advisory",
+      "description": "AI-powered health consultation"
+    }
+  ]
+}

@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MumbaiHacks - AI Surge Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/heroicons@2.0.18/24/outline/index.js" type="module"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'space': {
+                            900: '#0F0F23',
+                            800: '#1A1A2E',
+                            700: '#16213E',
+                        },
+                        'neon': {
+                            cyan: '#00D9FF',
+                            purple: '#8B5CF6',
+                            blue: '#3B82F6',
+                        }
+                    },
+                    animation: {
+                        'pulse-glow': 'pulse-glow 2s ease-in-out infinite alternate',
+                        'float': 'float 3s ease-in-out infinite',
+                        'slide-up': 'slide-up 0.8s ease-out',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                    },
+                    keyframes: {
+                        'pulse-glow': {
+                            'from': { 'box-shadow': '0 0 20px #00D9FF40' },
+                            'to': { 'box-shadow': '0 0 40px #00D9FF80, 0 0 60px #00D9FF40' }
+                        },
+                        'float': {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        },
+                        'slide-up': {
+                            'from': { transform: 'translateY(100px)', opacity: '0' },
+                            'to': { transform: 'translateY(0px)', opacity: '1' }
+                        },
+                        'glow': {
+                            'from': { 'text-shadow': '0 0 20px currentColor' },
+                            'to': { 'text-shadow': '0 0 40px currentColor, 0 0 60px currentColor' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .glass-dark {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .neon-border {
+            border: 1px solid;
+            border-image: linear-gradient(45deg, #00D9FF, #8B5CF6, #3B82F6) 1;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #0F0F23 0%, #1A1A2E 50%, #16213E 100%);
+        }
+        .text-glow {
+            text-shadow: 0 0 30px currentColor;
+        }
+        .hover-glow:hover {
+            box-shadow: 0 0 30px rgba(0, 217, 255, 0.5);
+            transform: scale(1.02);
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+
+<body class="font-inter gradient-bg text-white min-h-screen overflow-x-hidden">
+    
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 glass p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-gradient-to-r from-neon-cyan to-neon-purple rounded-lg flex items-center justify-center">
+                    <span class="text-xl font-bold">MH</span>
+                </div>
+                <span class="text-xl font-bold text-glow">MumbaiHacks</span>
+            </div>
+            <div class="hidden md:flex space-x-8">
+                <a href="#hero" class="hover:text-neon-cyan transition-colors">Home</a>
+                <a href="#dashboard" class="hover:text-neon-cyan transition-colors">Dashboard</a>
+                <a href="#simulator" class="hover:text-neon-cyan transition-colors">Simulator</a>
+                <a href="#advisory" class="hover:text-neon-cyan transition-colors">Advisory</a>
+                <a href="#map" class="hover:text-neon-cyan transition-colors">Map</a>
+            </div>
+            <button class="md:hidden text-neon-cyan">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="min-h-screen flex items-center justify-center relative pt-20">
+        <!-- Mumbai skyline panorama with dramatic lighting -->
+        <div class="absolute inset-0 opacity-20">
+            <img src="https://images.unsplash.com/photo-1567157577867-05ccb1388e66?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080" 
+                 alt="Mumbai skyline at night" class="w-full h-full object-cover">
+        </div>
+        
+        <div class="container mx-auto px-6 z-10">
+            <div class="text-center animate-slide-up">
+                <h1 class="text-6xl md:text-8xl font-bold mb-6 text-glow animate-glow">
+                    AI Surge Management
+                </h1>
+                <h2 class="text-3xl md:text-4xl font-light mb-8 text-neon-cyan">
+                    for Mumbai Hospitals
+                </h2>
+                <p class="text-xl mb-12 max-w-3xl mx-auto opacity-90">
+                    Leveraging artificial intelligence to predict, prepare, and manage patient surges 
+                    across Mumbai's healthcare network in real-time.
+                </p>
+            </div>
+
+            <!-- Hero Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
+                <!-- @COMPONENT: StatCard [title, value, status] -->
+                <div class="glass rounded-2xl p-6 hover-glow animate-float" style="animation-delay: 0.2s">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold">Next Surge Prediction</h3>
+                        <div class="w-3 h-3 bg-neon-cyan rounded-full animate-pulse-glow"></div>
+                    </div>
+                    <div class="text-3xl font-bold text-neon-cyan mb-2" data-bind="prediction.nextSurge">18% Rise</div>
+                    <p class="text-sm opacity-70">Expected tomorrow 6-8 PM</p>
+                    <div class="mt-4 text-xs text-neon-purple">🤖 AI Confidence: 87%</div>
+                </div>
+                <!-- @END_COMPONENT: StatCard -->
+
+                <div class="glass rounded-2xl p-6 hover-glow animate-float" style="animation-delay: 0.4s">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold">Current AQI Mumbai</h3>
+                        <div class="w-3 h-3 bg-orange-400 rounded-full animate-pulse-glow"></div>
+                    </div>
+                    <div class="text-3xl font-bold text-orange-400 mb-2" data-bind="aqi.current">284</div>
+                    <p class="text-sm opacity-70">Poor - Health Advisory Active</p>
+                    <div class="mt-4 text-xs text-neon-purple">📍 Worst: Andheri (312)</div>
+                </div>
+
+                <div class="glass rounded-2xl p-6 hover-glow animate-float" style="animation-delay: 0.6s">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold">Preparedness Score</h3>
+                        <div class="w-3 h-3 bg-green-400 rounded-full animate-pulse-glow"></div>
+                    </div>
+                    <div class="text-3xl font-bold text-green-400 mb-2" data-bind="preparedness.score">78/100</div>
+                    <p class="text-sm opacity-70">Good - System Ready</p>
+                    <div class="mt-4 text-xs text-neon-purple">⚡ Updated 2 min ago</div>
+                </div>
+            </div>
+
+            <div class="text-center mt-16">
+                <button class="glass-dark px-8 py-4 rounded-full text-lg font-semibold hover-glow neon-border">
+                    Enter AI Control Center →
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Admin Dashboard -->
+    <section id="dashboard" class="py-20 px-6">
+        <div class="container mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4 text-glow">AI Command Dashboard</h2>
+                <p class="text-xl opacity-80">Real-time intelligence for proactive healthcare management</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Real-time Patient Inflow Chart -->
+                <div class="glass rounded-3xl p-8 hover-glow">
+                    <h3 class="text-2xl font-semibold mb-6 flex items-center">
+                        <span class="w-3 h-3 bg-neon-cyan rounded-full mr-3 animate-pulse-glow"></span>
+                        Live Patient Inflow
+                    </h3>
+                    <!-- Modern hospital emergency room with medical staff -->
+                    <div class="relative mb-6 rounded-xl overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=300" 
+                             alt="Modern hospital emergency room" class="w-full h-48 object-cover opacity-50">
+                        <div class="absolute inset-0 bg-gradient-to-r from-neon-cyan/20 to-neon-purple/20"></div>
+                    </div>
+                    <!-- Dummy Chart Visualization -->
+                    <div class="space-y-4">
+                        <div class="flex justify-between text-sm">
+                            <span>Current Hour</span>
+                            <span class="text-neon-cyan font-bold" data-bind="inflow.current">47 patients</span>
+                        </div>
+                        <div class="w-full bg-gray-700 rounded-full h-2">
+                            <div class="bg-gradient-to-r from-neon-cyan to-neon-blue h-2 rounded-full w-3/4 animate-pulse"></div>
+                        </div>
+                        <div class="grid grid-cols-4 gap-4 text-xs">
+                            <div class="text-center">
+                                <div class="text-lg font-bold text-green-400" data-bind="inflow.er">12</div>
+                                <div>Emergency</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-lg font-bold text-neon-cyan" data-bind="inflow.icu">8</div>
+                                <div>ICU</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-lg font-bold text-neon-purple" data-bind="inflow.general">19</div>
+                                <div>General</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-lg font-bold text-orange-400" data-bind="inflow.outpatient">8</div>
+                                <div>Outpatient</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Prediction Alerts -->
+                <div class="glass rounded-3xl p-8 hover-glow">
+                    <h3 class="text-2xl font-semibold mb-6 flex items-center">
+                        <span class="w-3 h-3 bg-orange-400 rounded-full mr-3 animate-pulse-glow"></span>
+                        AI Prediction Alerts
+                    </h3>
+                    
+                    <div class="space-y-4">
+                        <!-- Alert Card 1 -->
+                        <div class="glass-dark rounded-xl p-4 border-l-4 border-orange-400 hover-glow">
+                            <div class="flex items-center mb-2">
+                                <span class="text-2xl mr-3">⚠️</span>
+                                <span class="font-semibold text-orange-400">Surge Alert</span>
+                            </div>
+                            <p class="text-sm mb-2" data-bind="alerts.surge">30% rise in asthma cases expected tomorrow</p>
+                            <div class="text-xs text-neon-purple">AI Confidence: 89% | Based on AQI trends</div>
+                        </div>
+
+                        <!-- Alert Card 2 -->
+                        <div class="glass-dark rounded-xl p-4 border-l-4 border-neon-cyan hover-glow">
+                            <div class="flex items-center mb-2">
+                                <span class="text-2xl mr-3">🧠</span>
+                                <span class="font-semibold text-neon-cyan">Staffing Alert</span>
+                            </div>
+                            <p class="text-sm mb-2" data-bind="alerts.staffing">Need 4 more ER doctors for weekend surge</p>
+                            <div class="text-xs text-neon-purple">Schedule optimization ready</div>
+                        </div>
+
+                        <!-- Alert Card 3 -->
+                        <div class="glass-dark rounded-xl p-4 border-l-4 border-red-400 hover-glow">
+                            <div class="flex items-center mb-2">
+                                <span class="text-2xl mr-3">📦</span>
+                                <span class="font-semibold text-red-400">Supply Alert</span>
+                            </div>
+                            <p class="text-sm mb-2" data-bind="alerts.supply">Low oxygen supply – recommend stocking 20 cylinders</p>
+                            <div class="text-xs text-neon-purple">Auto-order suggested</div>
+                        </div>
+                    </div>
+
+                    <!-- Hospital Preparedness Gauge -->
+                    <div class="mt-8 text-center">
+                        <h4 class="text-lg font-semibold mb-4">Hospital Preparedness Score</h4>
+                        <div class="relative w-32 h-32 mx-auto">
+                            <svg class="w-32 h-32 transform -rotate-90" viewBox="0 0 120 120">
+                                <circle cx="60" cy="60" r="54" stroke="#374151" stroke-width="8" fill="none"/>
+                                <circle cx="60" cy="60" r="54" stroke="url(#gradient)" stroke-width="8" 
+                                        fill="none" stroke-dasharray="339" stroke-dashoffset="85"
+                                        class="animate-pulse-glow"/>
+                                <defs>
+                                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                        <stop offset="0%" stop-color="#00D9FF"/>
+                                        <stop offset="100%" stop-color="#8B5CF6"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="text-center">
+                                    <div class="text-2xl font-bold text-neon-cyan" data-bind="preparedness.score">78</div>
+                                    <div class="text-xs">Score</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scenario Simulator -->
+    <section id="simulator" class="py-20 px-6">
+        <div class="container mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4 text-glow">AI Scenario Simulator</h2>
+                <p class="text-xl opacity-80">Test surge management strategies with predictive modeling</p>
+            </div>
+
+            <div class="max-w-6xl mx-auto">
+                <!-- Scenario Selector -->
+                <div class="glass rounded-2xl p-8 mb-8 text-center">
+                    <h3 class="text-2xl font-semibold mb-6">Select Emergency Scenario</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <button class="glass-dark rounded-xl p-6 hover-glow neon-border" data-scenario="festival">
+                            <div class="text-4xl mb-3">🎉</div>
+                            <div class="font-semibold">Festival Surge</div>
+                            <div class="text-sm opacity-70 mt-2">Ganesh Chaturthi weekend</div>
+                        </button>
+                        <button class="glass-dark rounded-xl p-6 hover-glow neon-border" data-scenario="pollution">
+                            <div class="text-4xl mb-3">🏭</div>
+                            <div class="font-semibold">Pollution Spike</div>
+                            <div class="text-sm opacity-70 mt-2">AQI >400 emergency</div>
+                        </button>
+                        <button class="glass-dark rounded-xl p-6 hover-glow neon-border" data-scenario="epidemic">
+                            <div class="text-4xl mb-3">🦠</div>
+                            <div class="font-semibold">Epidemic</div>
+                            <div class="text-sm opacity-70 mt-2">Viral outbreak scenario</div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Simulation Results -->
+                <!-- @STATE: selectedScenario:string = null -->
+                <div id="simulation-results" class="grid grid-cols-1 md:grid-cols-3 gap-6 opacity-50 transition-all duration-500">
+                    <!-- Prediction Card -->
+                    <div class="glass rounded-2xl p-6 hover-glow">
+                        <h4 class="font-semibold mb-4 flex items-center">
+                            <span class="text-2xl mr-3">📈</span>
+                            Predicted Patient Increase
+                        </h4>
+                        <!-- AI-powered healthcare data visualization -->
+                        <div class="relative mb-4 rounded-lg overflow-hidden h-32">
+                            <img src="https://images.unsplash.com/photo-1551076805-e1869033e561?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=200" 
+                                 alt="Healthcare data analytics dashboard" class="w-full h-full object-cover opacity-30">
+                        </div>
+                        <div class="text-3xl font-bold text-neon-cyan mb-2" data-bind="simulation.increase">+45%</div>
+                        <div class="text-sm opacity-70" data-bind="simulation.timeframe">Peak in 6-12 hours</div>
+                        <div class="mt-3 text-xs text-neon-purple">🤖 ML Model: EpiSurge v2.1</div>
+                    </div>
+
+                    <!-- Staff Requirements -->
+                    <div class="glass rounded-2xl p-6 hover-glow">
+                        <h4 class="font-semibold mb-4 flex items-center">
+                            <span class="text-2xl mr-3">👥</span>
+                            Staff Needed
+                        </h4>
+                        <div class="space-y-3">
+                            <div class="flex justify-between">
+                                <span>ER Doctors</span>
+                                <span class="text-neon-cyan font-bold" data-bind="simulation.staff.doctors">+6</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Nurses</span>
+                                <span class="text-neon-cyan font-bold" data-bind="simulation.staff.nurses">+12</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Technicians</span>
+                                <span class="text-neon-cyan font-bold" data-bind="simulation.staff.techs">+4</span>
+                            </div>
+                        </div>
+                        <div class="mt-4 text-xs text-neon-purple">📋 Schedule optimized</div>
+                    </div>
+
+                    <!-- Supply Requirements -->
+                    <div class="glass rounded-2xl p-6 hover-glow">
+                        <h4 class="font-semibold mb-4 flex items-center">
+                            <span class="text-2xl mr-3">📦</span>
+                            Supplies Required
+                        </h4>
+                        <div class="space-y-3">
+                            <div class="flex justify-between">
+                                <span>Oxygen Cylinders</span>
+                                <span class="text-orange-400 font-bold" data-bind="simulation.supplies.oxygen">25</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>IV Bags</span>
+                                <span class="text-orange-400 font-bold" data-bind="simulation.supplies.iv">150</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Ventilators</span>
+                                <span class="text-orange-400 font-bold" data-bind="simulation.supplies.vents">3</span>
+                            </div>
+                        </div>
+                        <div class="mt-4 text-xs text-neon-purple">🚚 Auto-order initiated</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Patient Advisory Portal -->
+    <section id="advisory" class="py-20 px-6">
+        <div class="container mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4 text-glow">Patient Advisory Portal</h2>
+                <p class="text-xl opacity-80">Real-time health advisories powered by AI analytics</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Live Advisories -->
+                <div class="glass rounded-3xl p-8 hover-glow">
+                    <h3 class="text-2xl font-semibold mb-6 flex items-center">
+                        <span class="w-3 h-3 bg-orange-400 rounded-full mr-3 animate-pulse-glow"></span>
+                        Live Health Advisories
+                    </h3>
+                    
+                    <!-- @MAP: advisories.map(advisory => ( -->
+                    <div class="space-y-4 max-h-80 overflow-y-auto custom-scrollbar">
+                        <div class="glass-dark rounded-xl p-4 hover-glow animate-slide-up">
+                            <div class="flex items-start">
+                                <span class="text-2xl mr-3">⚠️</span>
+                                <div class="flex-1">
+                                    <div class="font-semibold text-orange-400 mb-1">High AQI Alert - Andheri</div>
+                                    <p class="text-sm mb-2" data-mock="true">Current AQI: 312. Avoid outdoor activities. Use N95 masks if necessary.</p>
+                                    <div class="text-xs text-neon-purple">📍 Updated 5 min ago</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="glass-dark rounded-xl p-4 hover-glow animate-slide-up">
+                            <div class="flex items-start">
+                                <span class="text-2xl mr-3">🌡️</span>
+                                <div class="flex-1">
+                                    <div class="font-semibold text-neon-cyan mb-1">Heat Wave Advisory</div>
+                                    <p class="text-sm mb-2" data-mock="true">Temperature expected to reach 42°C. Stay hydrated and avoid sun exposure 11 AM - 4 PM.</p>
+                                    <div class="text-xs text-neon-purple">🌤️ Valid for next 3 days</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="glass-dark rounded-xl p-4 hover-glow animate-slide-up">
+                            <div class="flex items-start">
+                                <span class="text-2xl mr-3">💊</span>
+                                <div class="flex-1">
+                                    <div class="font-semibold text-green-400 mb-1">Medication Reminder</div>
+                                    <p class="text-sm mb-2" data-mock="true">Asthma patients: Ensure inhaler availability during current air quality conditions.</p>
+                                    <div class="text-xs text-neon-purple">🤖 Personalized for your profile</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- @END_MAP )) -->
+
+                    <!-- Subscription Modal Trigger -->
+                    <div class="mt-6 text-center">
+                        <button class="glass-dark px-6 py-3 rounded-full hover-glow neon-border" data-modal="subscription">
+                            📱 Subscribe to SMS/Email Alerts
+                        </button>
+                    </div>
+                </div>
+
+                <!-- AI Chatbot Mockup -->
+                <div class="glass rounded-3xl p-8 hover-glow">
+                    <h3 class="text-2xl font-semibold mb-6 flex items-center">
+                        <span class="w-3 h-3 bg-neon-purple rounded-full mr-3 animate-pulse-glow"></span>
+                        AI Health Assistant
+                    </h3>
+
+                    <!-- Chat Messages -->
+                    <!-- @COMPONENT: ChatBot [messages, isTyping] -->
+                    <div class="space-y-4 h-64 overflow-y-auto mb-4">
+                        <div class="flex items-start">
+                            <div class="w-8 h-8 bg-gradient-to-r from-neon-purple to-neon-cyan rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                                <span class="text-sm">🤖</span>
+                            </div>
+                            <div class="glass-dark rounded-2xl rounded-tl-none p-3 max-w-xs animate-slide-up">
+                                <p class="text-sm" data-mock="true">Hello! I'm your AI health assistant. How can I help you today?</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start justify-end">
+                            <div class="bg-neon-cyan/20 rounded-2xl rounded-tr-none p-3 max-w-xs">
+                                <p class="text-sm" data-mock="true">Is it safe to exercise outdoors today?</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <div class="w-8 h-8 bg-gradient-to-r from-neon-purple to-neon-cyan rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                                <span class="text-sm">🤖</span>
+                            </div>
+                            <div class="glass-dark rounded-2xl rounded-tl-none p-3 max-w-xs animate-slide-up">
+                                <p class="text-sm" data-mock="true">Based on current AQI of 284 in your area, I'd recommend indoor exercise today. The air quality is poor and may cause respiratory issues during outdoor activities.</p>
+                            </div>
+                        </div>
+
+                        <!-- AI Typing Indicator -->
+                        <div class="flex items-start">
+                            <div class="w-8 h-8 bg-gradient-to-r from-neon-purple to-neon-cyan rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                                <span class="text-sm">🤖</span>
+                            </div>
+                            <div class="glass-dark rounded-2xl rounded-tl-none p-3">
+                                <div class="flex space-x-1">
+                                    <div class="w-2 h-2 bg-neon-cyan rounded-full animate-pulse"></div>
+                                    <div class="w-2 h-2 bg-neon-cyan rounded-full animate-pulse" style="animation-delay: 0.2s"></div>
+                                    <div class="w-2 h-2 bg-neon-cyan rounded-full animate-pulse" style="animation-delay: 0.4s"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- @END_COMPONENT: ChatBot -->
+
+                    <!-- Chat Input -->
+                    <div class="flex items-center space-x-3">
+                        <div class="flex-1 relative">
+                            <input type="text" placeholder="Ask about health conditions, symptoms, or advice..." 
+                                   class="w-full glass-dark rounded-full px-6 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-neon-cyan"
+                                   data-implementation="Should connect to AI chat service">
+                            <div class="absolute right-3 top-1/2 transform -translate-y-1/2">
+                                <div class="w-2 h-2 bg-neon-cyan rounded-full animate-pulse-glow"></div>
+                            </div>
+                        </div>
+                        <button class="glass-dark p-3 rounded-full hover-glow neon-border" data-event="click:sendMessage">
+                            <svg class="w-5 h-5 text-neon-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mumbai Emergency Map -->
+    <section id="map" class="py-20 px-6">
+        <div class="container mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4 text-glow">Mumbai Emergency Map</h2>
+                <p class="text-xl opacity-80">Real-time hospital capacity and surge predictions across the city</p>
+            </div>
+
+            <div class="glass rounded-3xl p-8 hover-glow">
+                <!-- Map Container -->
+                <div class="relative bg-space-800 rounded-2xl overflow-hidden" style="height: 600px;">
+                    <!-- Mumbai cityscape aerial view showing the sprawling metropolitan area -->
+                    <div class="absolute inset-0">
+                        <img src="https://images.unsplash.com/photo-1595658658481-d53d3f999875?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=600" 
+                             alt="Mumbai cityscape aerial view" class="w-full h-full object-cover opacity-40">
+                        <div class="absolute inset-0 bg-gradient-to-t from-space-900/80 to-transparent"></div>
+                    </div>
+
+                    <!-- Hospital Markers -->
+                    <!-- @FUNCTIONALITY: This map should implement interactive markers using a mapping library like Mapbox or Google Maps -->
+                    
+                    <!-- Hospital Marker 1 - Andheri -->
+                    <div class="absolute top-32 left-48 transform -translate-x-1/2 -translate-y-1/2">
+                        <div class="relative cursor-pointer group" data-hospital="kokilaben">
+                            <div class="w-6 h-6 bg-green-400 rounded-full animate-pulse-glow group-hover:scale-125 transition-transform"></div>
+                            <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div class="glass-dark rounded-xl p-4 min-w-48 text-sm">
+                                    <h4 class="font-semibold text-green-400 mb-2">Kokilaben Hospital</h4>
+                                    <div class="space-y-1">
+                                        <div class="flex justify-between">
+                                            <span>Beds Available:</span>
+                                            <span class="text-green-400" data-bind="hospital.kokilaben.beds">23</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span>ICU Status:</span>
+                                            <span class="text-green-400" data-bind="hospital.kokilaben.icu">Good</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span>Surge Prediction:</span>
+                                            <span class="text-neon-cyan" data-bind="hospital.kokilaben.surge">+12%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hospital Marker 2 - Bandra -->
+                    <div class="absolute top-40 left-80">
+                        <div class="relative cursor-pointer group" data-hospital="hinduja">
+                            <div class="w-6 h-6 bg-orange-400 rounded-full animate-pulse-glow group-hover:scale-125 transition-transform"></div>
+                            <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div class="glass-dark rounded-xl p-4 min-w-48 text-sm">
+                                    <h4 class="font-semibold text-orange-400 mb-2">Hinduja Hospital</h4>
+                                    <div class="space-y-1">
+                                        <div class="flex justify-between">
+                                            <span>Beds Available:</span>
+                                            <span class="text-orange-400" data-bind="hospital.hinduja.beds">7</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span>ICU Status:</span>
+                                            <span class="text-orange-400" data-bind="hospital.hinduja.icu">Moderate</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span>Surge Prediction:</span>
+                                            <span class="text-neon-cyan" data-bind="hospital.hinduja.surge">+28%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hospital Marker 3 - South Mumbai -->
+                    <div class="absolute top-96 left-96">
+                        <div class="relative cursor-pointer group" data-hospital="breach-candy">
+                            <div class="w-6 h-6 bg-green-400 rounded-full animate-pulse-glow group-hover:scale-125 transition-transform"></div>
+                            <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div class="glass-dark rounded-xl p-4 min-w-48 text-sm">
+                                    <h4 class="font-semibold text-green-400 mb-2">Breach Candy Hospital</h4>
+                                    <div class="space-y-1">
+                                        <div class="flex justify-between">
+                                            <span>Beds Available:</span>
+                                            <span class="text-green-400" data-bind="hospital.breach-candy.beds">31</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span>ICU Status:</span>
+                                            <span class="text-green-400" data-bind="hospital.breach-candy.icu">Excellent</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span>Surge Prediction:</span>
+                                            <span class="text-neon-cyan" data-bind="hospital.breach-candy.surge">+8%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hospital Marker 4 - Thane -->
+                    <div class="absolute top-16 right-32">
+                        <div class="relative cursor-pointer group" data-hospital="jupiter">
+                            <div class="w-6 h-6 bg-red-400 rounded-full animate-pulse-glow group-hover:scale-125 transition-transform"></div>
+                            <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div class="glass-dark rounded-xl p-4 min-w-48 text-sm">
+                                    <h4 class="font-semibold text-red-400 mb-2">Jupiter Hospital</h4>
+                                    <div class="space-y-1">
+                                        <div class="flex justify-between">
+                                            <span>Beds Available:</span>
+                                            <span class="text-red-400" data-bind="hospital.jupiter.beds">2</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span>ICU Status:</span>
+                                            <span class="text-red-400" data-bind="hospital.jupiter.icu">Critical</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span>Surge Prediction:</span>
+                                            <span class="text-neon-cyan" data-bind="hospital.jupiter.surge">+45%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hotspot Zones -->
+                    <div class="absolute top-20 left-32 w-32 h-32 bg-red-400/30 rounded-full animate-pulse-glow"></div>
+                    <div class="absolute top-64 left-64 w-24 h-24 bg-orange-400/30 rounded-full animate-pulse-glow"></div>
+
+                    <!-- Map Legend -->
+                    <div class="absolute bottom-6 left-6 glass-dark rounded-xl p-4">
+                        <h4 class="font-semibold mb-3 text-sm">Hospital Status</h4>
+                        <div class="space-y-2 text-xs">
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 bg-green-400 rounded-full mr-2"></div>
+                                <span>Good Capacity</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 bg-orange-400 rounded-full mr-2"></div>
+                                <span>Moderate Capacity</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 bg-red-400 rounded-full mr-2"></div>
+                                <span>Critical Capacity</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Live Stats -->
+                    <div class="absolute top-6 right-6 glass-dark rounded-xl p-4">
+                        <h4 class="font-semibold mb-3 text-sm">City Overview</h4>
+                        <div class="space-y-2 text-xs">
+                            <div class="flex justify-between">
+                                <span>Total Hospitals:</span>
+                                <span class="text-neon-cyan" data-bind="city.hospitals">47</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Available Beds:</span>
+                                <span class="text-green-400" data-bind="city.beds">1,247</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>ICU Capacity:</span>
+                                <span class="text-orange-400" data-bind="city.icu">73%</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>AI Alert Level:</span>
+                                <span class="text-neon-purple" data-bind="city.alert">Medium</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 px-6 border-t border-white/10">
+        <div class="container mx-auto text-center">
+            <div class="flex items-center justify-center mb-6">
+                <div class="w-12 h-12 bg-gradient-to-r from-neon-cyan to-neon-purple rounded-lg flex items-center justify-center mr-4">
+                    <span class="text-2xl font-bold">MH</span>
+                </div>
+                <span class="text-2xl font-bold text-glow">MumbaiHacks</span>
+            </div>
+            <p class="text-lg mb-4">AI-Powered Healthcare Surge Management for Mumbai</p>
+            <p class="opacity-70">Built with ❤️ for healthcare heroes. Powered by artificial intelligence.</p>
+            <div class="mt-8 text-sm text-neon-purple">
+                🤖 System Status: <span class="text-green-400">All AI agents operational</span> | 
+                📊 Last Updated: <span data-bind="system.lastUpdate">2 minutes ago</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Interactivity -->
+    <script>
+        (function() {
+            // TODO: Implement business logic, API calls, or state management
+            
+            // Scenario Simulator Interaction
+            const scenarioButtons = document.querySelectorAll('[data-scenario]');
+            const simulationResults = document.getElementById('simulation-results');
+            
+            scenarioButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active state from all buttons
+                    scenarioButtons.forEach(btn => btn.classList.remove('bg-neon-cyan/20'));
+                    // Add active state to clicked button
+                    this.classList.add('bg-neon-cyan/20');
+                    
+                    // Animate results panel
+                    simulationResults.classList.remove('opacity-50');
+                    simulationResults.classList.add('animate-slide-up');
+                    
+                    // Simulate data updates based on scenario
+                    const scenario = this.dataset.scenario;
+                    updateSimulationData(scenario);
+                });
+            });
+            
+            function updateSimulationData(scenario) {
+                // Dummy data updates based on scenario selection
+                const data = {
+                    festival: {
+                        increase: '+65%',
+                        timeframe: 'Peak in 4-8 hours',
+                        staff: { doctors: '+8', nurses: '+16', techs: '+6' },
+                        supplies: { oxygen: '40', iv: '200', vents: '5' }
+                    },
+                    pollution: {
+                        increase: '+45%', 
+                        timeframe: 'Peak in 6-12 hours',
+                        staff: { doctors: '+6', nurses: '+12', techs: '+4' },
+                        supplies: { oxygen: '25', iv: '150', vents: '3' }
+                    },
+                    epidemic: {
+                        increase: '+120%',
+                        timeframe: 'Peak in 2-4 days',
+                        staff: { doctors: '+15', nurses: '+30', techs: '+10' },
+                        supplies: { oxygen: '80', iv: '400', vents: '12' }
+                    }
+                };
+                
+                const scenarioData = data[scenario];
+                if (scenarioData) {
+                    document.querySelector('[data-bind="simulation.increase"]').textContent = scenarioData.increase;
+                    document.querySelector('[data-bind="simulation.timeframe"]').textContent = scenarioData.timeframe;
+                    document.querySelector('[data-bind="simulation.staff.doctors"]').textContent = scenarioData.staff.doctors;
+                    document.querySelector('[data-bind="simulation.staff.nurses"]').textContent = scenarioData.staff.nurses;
+                    document.querySelector('[data-bind="simulation.staff.techs"]').textContent = scenarioData.staff.techs;
+                    document.querySelector('[data-bind="simulation.supplies.oxygen"]').textContent = scenarioData.supplies.oxygen;
+                    document.querySelector('[data-bind="simulation.supplies.iv"]').textContent = scenarioData.supplies.iv;
+                    document.querySelector('[data-bind="simulation.supplies.vents"]').textContent = scenarioData.supplies.vents;
+                }
+            }
+            
+            // Smooth scrolling for navigation
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+            
+            // Simulate real-time data updates
+            function simulateRealTimeUpdates() {
+                // Update random data points to simulate live system
+                const updateElements = [
+                    '[data-bind="inflow.current"]',
+                    '[data-bind="inflow.er"]',
+                    '[data-bind="preparedness.score"]'
+                ];
+                
+                setInterval(() => {
+                    updateElements.forEach(selector => {
+                        const element = document.querySelector(selector);
+                        if (element) {
+                            // Add subtle glow effect when data updates
+                            element.classList.add('animate-pulse-glow');
+                            setTimeout(() => element.classList.remove('animate-pulse-glow'), 1000);
+                        }
+                    });
+                }, 30000); // Update every 30 seconds
+            }
+            
+            // Initialize real-time simulation
+            simulateRealTimeUpdates();
+            
+            // Add intersection observer for animation triggers
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate-slide-up');
+                    }
+                });
+            }, observerOptions);
+            
+            // Observe all glass panels for entrance animations
+            document.querySelectorAll('.glass, .glass-dark').forEach(panel => {
+                observer.observe(panel);
+            });
+            
+        })();
+    </script>
+
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, #00D9FF, #8B5CF6);
+            border-radius: 10px;
+        }
+    </style>
+</body>
+</html>
